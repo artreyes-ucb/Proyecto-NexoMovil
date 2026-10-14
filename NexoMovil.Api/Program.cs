@@ -22,6 +22,7 @@ namespace NexoMovil.Api
             builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             // Controllers & OpenAPI
             builder.Services.AddControllers();

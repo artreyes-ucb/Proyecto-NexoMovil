@@ -113,6 +113,32 @@ namespace NexoMovil.Api.Controllers
                 productId = product.Id,
                 nuevoStock = product.Stock
             });
+
+            // POST: api/Product
+            [HttpPost]
+            public async Task<IActionResult> Create([FromBody] CreateProductDto createProductDto)
+            {
+                // Validación manual (RN-08: precio debe ser mayor a cero)
+                if (createProductDto.Price <= 0)
+                    return BadRequest("El precio debe ser mayor a cero.");
+
+                // Validación básica de otros campos
+                if (string.IsNullOrWhiteSpace(createProductDto.Model) ||
+                    string.IsNullOrWhiteSpace(createProductDto.Brand))
+                {
+                    return BadRequest("Modelo y marca son obligatorios.");
+                }
+
+                var product = _mapper.Map<Product>(createProductDto);
+                product.Stock = 0;
+                product.CreatedAt = DateTime.Now;
+
+                await _productRepository.Add(product);
+                await _productRepository.SaveChangesAsync();
+
+                var productDto = _mapper.Map<ProductDto>(product);
+                return CreatedAtAction(nameof(GetById), new { id = product.Id }, productDto);
+            }
         }
     }
 }

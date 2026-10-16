@@ -28,7 +28,7 @@ namespace NexoMovil.Api
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
 
-            // AutoMapper (Escanea todo el ensamblado de Infrastructure donde están los Mappings)
+            // AutoMapper (Escanea todo el ensamblado de Infrastructure)
             builder.Services.AddAutoMapper(typeof(ProductProfile).Assembly);
 
             var app = builder.Build();

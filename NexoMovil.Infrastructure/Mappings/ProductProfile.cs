@@ -15,6 +15,8 @@ namespace NexoMovil.Infrastructure.Mappings
 
             CreateMap<ProductDto, Product>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
+
+            CreateMap<CreateProductDto, Product>();
         }
     }
 
@@ -73,4 +75,5 @@ namespace NexoMovil.Infrastructure.Mappings
             throw new FormatException($"No se pudo convertir la fecha '{source}' a DateTime. Formatos soportados: fecha, fecha y hora, fecha con AM/PM");
         }
     }
+
 }

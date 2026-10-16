@@ -83,5 +83,36 @@ namespace NexoMovil.Api.Controllers
 
             return NoContent();
         }
+
+        // POST: api/Product/ingreso-inventario
+        [HttpPost("ingreso-inventario")]
+        public async Task<IActionResult> IngresoInventario([FromBody] InventoryIngressDto dto)
+        {
+            // Validación manual (RN-03: la cantidad debe ser mayor a cero)
+            if (dto.Quantity <= 0)
+                return BadRequest("La cantidad debe ser mayor a cero.");
+
+            // Buscar el producto en la base de datos
+            var product = await _productRepository.GetById(dto.ProductId);
+
+            // Si no existe, retornar 404 (Flujo alternativo 3a del CU-01)
+            if (product == null)
+                return NotFound("Producto no encontrado.");
+
+            // Incrementar el stock
+            product.Stock += dto.Quantity;
+
+            // Persistir el cambio (Update es void, luego SaveChangesAsync)
+            _productRepository.Update(product);
+            await _productRepository.SaveChangesAsync();
+
+            // Confirmar éxito (Flujo principal paso 6)
+            return Ok(new
+            {
+                message = "Stock actualizado correctamente.",
+                productId = product.Id,
+                nuevoStock = product.Stock
+            });
+        }
     }
 }
